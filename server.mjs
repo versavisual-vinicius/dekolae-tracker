@@ -19,7 +19,10 @@ if (fs.existsSync('.env')) {
 
 async function start() {
   const vite = await createViteServer({
-    server: { middlewareMode: true },
+    server: { 
+      middlewareMode: true,
+      allowedHosts: true
+    },
     appType: 'spa'
   });
 
