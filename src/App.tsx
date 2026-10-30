@@ -347,6 +347,10 @@ export default function App() {
                 <img 
                   src={ev.coverUrl} 
                   alt={ev.name}
+                  fetchPriority="high"
+                  decoding="async"
+                  width={80}
+                  height={80}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-amber-500/30 shadow-lg shadow-amber-500/10 shrink-0" 
                 />
               ) : (

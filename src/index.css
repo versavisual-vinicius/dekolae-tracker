@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scrollbar-color: #1F2937 #06080B;
+    scrollbar-width: thin;
+  }
+
   body {
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #06080B;
@@ -10,10 +19,15 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar fallback for legacy webkit browsers */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
