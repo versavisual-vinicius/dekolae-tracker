@@ -27,6 +27,21 @@
   }
 }
 
+/* Defer rendering of heavy below-the-fold content */
+.heavy-deferred-content {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 400px;
+}
+
+/* Accessible View Transitions with reduced motion safety */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* Custom scrollbar fallback for legacy webkit browsers */
 ::-webkit-scrollbar {
   width: 6px;

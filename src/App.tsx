@@ -192,6 +192,17 @@ export default function App() {
     fetchData();
   }, []);
 
+  const handleTabChange = (tab: 'cortesias' | 'lotes' | 'pacing' | 'canais' | 'titulares') => {
+    if (tab === activeTab) return;
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+      (document as any).startViewTransition(() => {
+        setActiveTab(tab);
+      });
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
   const handleManualRefresh = () => {
     if (cooldown > 0 || refreshing) return;
     fetchData(true);
@@ -305,7 +316,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6">
           {/* Header Row: Live Status + Actions */}
           <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5" aria-live="polite">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
@@ -476,9 +487,17 @@ export default function App() {
 
       {/* Tabs Navigation */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-6">
-        <div className="flex items-center gap-2 border-b border-white/10 overflow-x-auto pb-2 scrollbar-none">
+        <div 
+          role="tablist" 
+          aria-label="Navegação de seções do evento"
+          className="flex items-center gap-2 border-b border-white/10 overflow-x-auto pb-2 scrollbar-none"
+        >
           <button
-            onClick={() => setActiveTab('cortesias')}
+            role="tab"
+            id="tab-cortesias"
+            aria-selected={activeTab === 'cortesias'}
+            aria-controls="panel-cortesias"
+            onClick={() => handleTabChange('cortesias')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeTab === 'cortesias'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20 font-bold'
@@ -490,7 +509,11 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('lotes')}
+            role="tab"
+            id="tab-lotes"
+            aria-selected={activeTab === 'lotes'}
+            aria-controls="panel-lotes"
+            onClick={() => handleTabChange('lotes')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeTab === 'lotes'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20 font-bold'
@@ -502,7 +525,11 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('pacing')}
+            role="tab"
+            id="tab-pacing"
+            aria-selected={activeTab === 'pacing'}
+            aria-controls="panel-pacing"
+            onClick={() => handleTabChange('pacing')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeTab === 'pacing'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20 font-bold'
@@ -514,7 +541,11 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('canais')}
+            role="tab"
+            id="tab-canais"
+            aria-selected={activeTab === 'canais'}
+            aria-controls="panel-canais"
+            onClick={() => handleTabChange('canais')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeTab === 'canais'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20 font-bold'
@@ -526,7 +557,11 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('titulares')}
+            role="tab"
+            id="tab-titulares"
+            aria-selected={activeTab === 'titulares'}
+            aria-controls="panel-titulares"
+            onClick={() => handleTabChange('titulares')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
               activeTab === 'titulares'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-lg shadow-amber-500/20 font-bold'
@@ -540,7 +575,12 @@ export default function App() {
       </div>
 
       {/* Tab Contents */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div 
+        role="tabpanel"
+        id={`panel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+        className="max-w-6xl mx-auto px-4 sm:px-6"
+      >
         {/* ============================================================== */}
         {/* TAB 1: CORTESIAS & PARCERIAS INSTITUCIONAIS                    */}
         {/* ============================================================== */}
@@ -644,7 +684,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 heavy-deferred-content">
                 {courtesies.partners.map((p, idx) => (
                   <div 
                     key={idx}
@@ -926,12 +966,17 @@ export default function App() {
               {/* Filtros e Busca */}
               <div className="flex flex-col sm:flex-row gap-3 mb-4">
                 <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-white/40 absolute left-3 top-3" />
+                  <label htmlFor="buyer-search" className="sr-only">
+                    Buscar por nome, email, lote ou cidade
+                  </label>
+                  <Search className="w-4 h-4 text-white/40 absolute left-3 top-3 pointer-events-none" />
                   <input
-                    type="text"
+                    id="buyer-search"
+                    type="search"
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder="Buscar por nome, email, lote ou cidade..."
+                    aria-label="Buscar por nome, email, lote ou cidade"
                     className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-amber-500 transition-all"
                   />
                 </div>
@@ -965,15 +1010,21 @@ export default function App() {
               </div>
 
               {/* Tabela de Titulares */}
-              <div className="overflow-x-auto">
+              <div 
+                tabIndex={0} 
+                role="region" 
+                aria-label="Tabela de ingressos e titulares"
+                className="overflow-x-auto rounded-xl border border-white/10 focus:outline-none focus:ring-1 focus:ring-amber-500/50 heavy-deferred-content"
+              >
                 <table className="w-full text-left text-xs text-white/70">
+                  <caption className="sr-only">Lista de titulares de ingressos emitidos e cortesias do Dekolaê Sunset</caption>
                   <thead className="bg-white/5 text-white/50 uppercase font-mono text-[11px] border-b border-white/10">
                     <tr>
-                      <th className="py-2.5 px-3">Titular</th>
-                      <th className="py-2.5 px-3">Lote</th>
-                      <th className="py-2.5 px-3">Tipo</th>
-                      <th className="py-2.5 px-3">Data</th>
-                      <th className="py-2.5 px-3">Cidade</th>
+                      <th scope="col" className="py-2.5 px-3">Titular</th>
+                      <th scope="col" className="py-2.5 px-3">Lote</th>
+                      <th scope="col" className="py-2.5 px-3">Tipo</th>
+                      <th scope="col" className="py-2.5 px-3">Data</th>
+                      <th scope="col" className="py-2.5 px-3">Cidade</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
