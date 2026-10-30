@@ -18,4 +18,5 @@
   - [x] Scrollbar padronizada: `scrollbar-color` e `scrollbar-width: thin`
   - [x] Tipografia: `text-wrap: balance` e `text-wrap: pretty`
 - [x] Repositório publicado no GitHub: `versavisual-vinicius/dekolae-tracker`
-- [x] Túnel Cloudflare público ativo para o cliente
+- [x] Deploy em Produção na Vercel: `https://dekolae-tracker-chi.vercel.app`
+- [x] Variáveis de ambiente configuradas na Vercel (organizador 256131 e token)
